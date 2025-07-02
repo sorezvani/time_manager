@@ -22,11 +22,18 @@ class Project(models.Model):
     created_at = jmodels.jDateTimeField(default=timezone.now)
 
     @property
-    def total_duration(self):
+    def total_duration_milliseconds(self):
         total = timedelta()
         for task in self.tasks.all():
-            total += task.total_duration
+            total += task.total_duration_milliseconds
         return total
+    
+    @property
+    def total_duration(self):
+        total_seconds = int(self.total_duration_milliseconds.total_seconds())
+        hours, remainder = divmod(total_seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return f"{hours:02}:{minutes:02}:{seconds:02}"
 
     def __str__(self):
         return self.name
@@ -39,13 +46,20 @@ class Task(models.Model):
     created_at = jmodels.jDateTimeField(default=timezone.now)
 
     @property
-    def total_duration(self):
+    def total_duration_milliseconds(self):
         total = timedelta()
         for entry in self.time_entries.all():
             if entry.duration:
                 total += entry.duration
         return total
-
+    
+    @property
+    def total_duration(self):
+        total_seconds = int(self.total_duration_milliseconds.total_seconds())
+        hours, remainder = divmod(total_seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return f"{hours:02}:{minutes:02}:{seconds:02}"
+    
     def __str__(self):
         return self.name
 
