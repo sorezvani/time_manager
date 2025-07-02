@@ -2,11 +2,13 @@ services:
   web:
     build: .
     ports:
-      - "2751:8000"
-    command: gunicorn datasheet.wsgi:application --bind 0.0.0.0:8000
+      - "8000:8000"
+    command: gunicorn timesheet.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - db_data:/app/data
+      - static_files:/app/staticfiles
     restart: unless-stopped
 
 volumes:
   db_data:
+  static_files:
