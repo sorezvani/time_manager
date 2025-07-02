@@ -6,9 +6,6 @@ set -e
 echo "Applying database migrations..."
 python manage.py migrate --noinput
 
-echo "Collecting static files..."
-# python manage.py collectstatic --noinput
-
 # Create a superuser if it doesn't exist
 # This Python script is run inside the shell script
 echo "Checking for superuser..."
