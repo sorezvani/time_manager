@@ -6,7 +6,7 @@ from django.utils import timezone
 from .forms import TaskForm, ProjectForm
 
 def dashboard(request):
-    projects = Project.objects.all()
+    projects = Project.objects.all().order_by('-id')
 
     if request.method == 'POST':
         form = ProjectForm(request.POST)
@@ -52,7 +52,8 @@ def project_detail(request, pk):
                 new_task.save()
                 return redirect('project_detail', pk=project.pk)
 
-    tasks = project.tasks.all()
+    tasks = project.tasks.all().order_by('-id')
+    
     return render(request, 'project_detail.html', {
         'project': project,
         'tasks': tasks,
