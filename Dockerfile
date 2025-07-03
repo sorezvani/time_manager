@@ -15,6 +15,9 @@ RUN pip install -r requirements.txt
 # Copy the project code into the container
 COPY . .
 
+# Run collectstatic to gather all static files into /app/staticfiles/
+RUN python manage.py collectstatic --no-input
+
 # Create a directory for the persistent database
 RUN mkdir -p /app/data
 

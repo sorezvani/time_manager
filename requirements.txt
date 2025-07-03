@@ -1,3 +1,4 @@
 django==5.2.3
 django-jalali==7.4.0
 gunicorn==23.0.0
+WhiteNoise==6.9.0
