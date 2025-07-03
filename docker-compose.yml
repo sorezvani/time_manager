@@ -1,14 +1,17 @@
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
     ports:
-      - "8000:8000"
+      - "2751:8000"
+    entrypoint: /app/entrypoint.sh
     command: gunicorn timesheet.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - db_data:/app/data
+      - ./data:/app/data
       - static_files:/app/staticfiles
     restart: unless-stopped
 
 volumes:
-  db_data:
   static_files:
