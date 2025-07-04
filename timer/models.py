@@ -20,20 +20,7 @@ class Project(models.Model):
     description = models.TextField(null=True, blank=True)
     state = models.CharField(max_length=1, choices=State.CHOICES, default='N')
     created_at = jmodels.jDateTimeField(default=timezone.now)
-
-    @property
-    def total_duration_milliseconds(self):
-        total = timedelta()
-        for task in self.tasks.all():
-            total += task.total_duration_milliseconds
-        return total
-    
-    @property
-    def total_duration(self):
-        total_seconds = int(self.total_duration_milliseconds.total_seconds())
-        hours, remainder = divmod(total_seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        return f"{hours:02}:{minutes:02}:{seconds:02}"
+    total_duration = models.DurationField(default=timedelta(0), editable=False)
 
     def __str__(self):
         return self.name
@@ -44,28 +31,13 @@ class Task(models.Model):
     description = models.TextField(null=True, blank=True)
     state = models.CharField(max_length=1, choices=State.CHOICES, default='N')
     created_at = jmodels.jDateTimeField(default=timezone.now)
-
-    @property
-    def total_duration_milliseconds(self):
-        total = timedelta()
-        for entry in self.time_entries.all():
-            if entry.duration:
-                total += entry.duration
-        return total
-    
-    @property
-    def total_duration(self):
-        total_seconds = int(self.total_duration_milliseconds.total_seconds())
-        hours, remainder = divmod(total_seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        return f"{hours:02}:{minutes:02}:{seconds:02}"
+    total_duration = models.DurationField(default=timedelta(0), editable=False)
     
     def __str__(self):
         return self.name
 
 class TimeEntry(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='time_entries')
-    description = models.TextField(null=True, blank=True)
     start_time = jmodels.jDateTimeField(default=timezone.now)
     end_time = jmodels.jDateTimeField(null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
@@ -79,5 +51,6 @@ class TimeEntry(models.Model):
     def save(self, *args, **kwargs):
         self.clean()  # Auto-run validation & duration
         super().save(*args, **kwargs)
+        
     def __str__(self):
         return f"{self.task.name} | {self.duration}"

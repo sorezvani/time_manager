@@ -56,7 +56,7 @@
     
 
 <div class="d-flex justify-content-between align-items-start mb-4">
-  <p class="mb-0" style="margin-top: 11px;"><strong>Total Duration:</strong> {{ project.total_duration }}</p>
+  <p class="mb-0" style="margin-top: 11px;"><strong>Total Duration:</strong> {{ project.total_duration|format_duration }}</p>
   <button class="btn btn-success my-0" onclick="toggleTaskForm()">+ Add Task</button>
 </div>
 
@@ -90,7 +90,7 @@
                   {{ task.get_state_display }}
                 </span>
               </td>
-              <td>{{ task.total_duration }}</td>
+              <td>{{ task.total_duration|format_duration }}</td>
               <td>
                 <form method="post" class="d-flex align-items-center gap-2 task-state-form">
                   {% csrf_token %}
