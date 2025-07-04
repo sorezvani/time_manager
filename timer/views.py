@@ -44,7 +44,7 @@ def project_detail(request, pk):
             return redirect('project_detail', pk=project.pk)
 
         # Handle new task creation
-        elif 'add_task' in request.POST:
+        elif 'submit_new_task' in request.POST:
             task_form = TaskForm(request.POST)
             if task_form.is_valid():
                 new_task = task_form.save(commit=False)
